@@ -4,7 +4,7 @@ info:
   version: "1.0.0"
   description: Completes a PowerPoint file by replacing {{AI_...}} placeholders with AI-generated insights.
 servers:
-  - url: https://YOUR-DOMAIN-HERE.com
+  - url: https://pptx-placeholder-filler.onrender.com
 paths:
   /health:
     get:
