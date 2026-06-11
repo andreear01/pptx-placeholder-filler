@@ -1,0 +1,76 @@
+openapi: 3.1.0
+info:
+  title: PowerPoint Placeholder Filler
+  version: "1.0.0"
+  description: Completes a PowerPoint file by replacing {{AI_...}} placeholders with AI-generated insights.
+servers:
+  - url: https://YOUR-DOMAIN-HERE.com
+paths:
+  /health:
+    get:
+      operationId: healthCheck
+      summary: Check if the PowerPoint filler API is online
+      responses:
+        "200":
+          description: API is online
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /fill_powerpoint_base64:
+    post:
+      operationId: fillPowerPointBase64
+      summary: Replace PowerPoint placeholders and return the completed PPTX as base64
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - pptx_base64
+                - replacements
+              properties:
+                pptx_base64:
+                  type: string
+                  description: Base64 encoded .pptx file.
+                replacements:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  description: Mapping where each key is a placeholder like {{AI_MX_OVERALL_INSIGHTS}} and each value is the exact text or image prompt.
+                remove_image_placeholders:
+                  type: boolean
+                  default: true
+                  description: If true, image placeholders are removed from the PPTX and returned separately as image prompts.
+      responses:
+        "200":
+          description: Completed PowerPoint returned as base64.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  completed_pptx_base64:
+                    type: string
+                  report:
+                    type: object
+                  image_prompts:
+                    type: object
+                    additionalProperties:
+                      type: string
+        "400":
+          description: Invalid input
+        "401":
+          description: Invalid or missing API key
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
